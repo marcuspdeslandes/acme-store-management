@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet author="angels" id="0000000000000-1">
+        <sql dbms="postgresql"
+             endDelimiter="\nGO"
+             splitStatements="true"
+             stripComments="true">
+
+            CREATE TABLE public.store (
+            id bigint NOT NULL,
+            code varchar,
+            description text,
+            name varchar,
+            opening_date timestamp NOT NULL,
+            store_type varchar,
+            CONSTRAINT store_id_pkey PRIMARY KEY (id)
+            );
+            CREATE INDEX store_name_idx ON public.store (id,name);
+
+
+            CREATE TABLE public.store_seasons (
+            store_id bigint NOT NULL,
+            season varchar,
+            CONSTRAINT store_season_fk FOREIGN KEY (store_id) REFERENCES store (id)
+            );
+            CREATE INDEX store_seasons_idx ON public.store_seasons (store_id,season);
+
+            CREATE TABLE public.extra_data (
+            store_id bigint NOT NULL,
+            special_field_1 varchar,
+            special_field_2 varchar,
+            CONSTRAINT extra_data_fk FOREIGN KEY (store_id) REFERENCES store (id)
+            );
+
+        </sql>
+        <createSequence sequenceName="store_sequence" startValue="1" incrementBy="1"/>
+        <comment>Scripts to initialize database</comment>
+    </changeSet>
+</databaseChangeLog>

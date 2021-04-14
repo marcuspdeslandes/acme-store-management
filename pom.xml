@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.acme.store.management</groupId>
+    <artifactId>acme-store-management</artifactId>
+    <version>1.0.0</version>
+    <name>ACME Corporation Store Management</name>
+    <description>Maven umbrella project for ACME Corporation Store Management backend services</description>
+    <packaging>pom</packaging>
+
+
+    <modules>
+        <module>acme-store-api</module>
+		
+        <module>acme-store-import</module>
+        <module>acme-store-persist</module>
+
+        <module>acme-store-library-commons</module>
+
+    </modules>
+</project>
