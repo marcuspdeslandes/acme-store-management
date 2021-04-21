@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=acmestore
+      
+  persist:
+    image: 'acme-store-persist:latest'
+    build:
+      context: /workspace/acme-store-management/acme-store-persist
+      dockerfile: /workspace/acme-store-management/acme-store-persist/Dockerfile
+    container_name: persist
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/acmestore
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+          
+  import:
+    image: 'acme-store-import:latest'
+    build:
+      context: /workspace/acme-store-management/acme-store-import
+      dockerfile: /workspace/acme-store-management/acme-store-import/Dockerfile
+    container_name: import
+    ports:
+      - "8087:8087"
+    depends_on:
+      - persist
+      
+  react-frontend:
+    image: 'react-acme-store:latest'
+    build:
+      context: /workspace/acme-store-management/react-acme-store
+      dockerfile: /workspace/acme-store-management/react-acme-store/Dockerfile
+    container_name: react-frontend
+    command: npm start
+    ports:
+      - "3000:3000"
+    depends_on:
+      - persist
+      
+      
+  vue-frontend:
+    image: 'vue-acme-store:latest'
+    build:
+      context: /workspace/acme-store-management/vue-acme-store
+      dockerfile: /workspace/acme-store-management/vue-acme-store/Dockerfile
+    container_name: vue-frontend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - persist
